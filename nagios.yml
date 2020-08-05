@@ -1,0 +1,7 @@
+---
+- name: Install Nagios Server
+  hosts: all
+  remote_user: root
+  become: yes
+  roles:
+    - nagiosinstall
