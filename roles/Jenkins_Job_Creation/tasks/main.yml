@@ -1,0 +1,20 @@
+---
+- name: Install python-jenkins
+  become: yes
+  become_method: sudo
+  become_user: root
+  pip: name=python-jenkins
+  
+- name: Install python-jenkins
+  become: yes
+  become_method: sudo
+  become_user: root
+  pip: name=lxml
+
+- jenkins_job:
+   config: "{{ lookup('file', 'files/template.xml') }}"
+   name: Automated_PipelineJob
+   url: "http://127.0.0.1:8080"
+   user: "{{ jenkins_user }}"
+   password: "{{ jenkins_password }}"
+
