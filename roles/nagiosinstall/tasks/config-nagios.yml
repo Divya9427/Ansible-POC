@@ -1,0 +1,56 @@
+---
+  - name: Upgrade all apt packages
+    apt:
+      update_cache: yes
+      force_apt_get: yes
+  - name: Install list of packages
+    apt:
+       name: nagios-nrpe-plugin
+       state: latest
+       force: yes
+#Create Object Configuration
+  - name: creating config file for nagios
+    become: true
+    file: path=/usr/local/nagios/etc/servers state=directory mode=0755 owner={{ nagios_username }} group={{ nagios_group }}
+
+#Create nagios hosts file
+  - name: creating hosts file for nagios
+    become: true
+    file: path=/usr/local/nagios/etc/servers/hosts state=directory mode=0755 owner={{ nagios_username }} group={{ nagios_group }}
+
+
+#Allow nagios to read all definition under the above directory
+  - name: nagios to read config file
+    become: true
+    lineinfile: "dest=/usr/local/nagios/etc/nagios.cfg state=present
+          	regexp='#cfg_dir=/usr/local/nagios/etc/servers'
+	        line='cfg_dir=/usr/local/nagios/etc/servers'"
+     
+
+#Create a command definition
+  - name: command definition for nagios object
+    become: true
+    template: src=commands.cfg.j2 dest=/usr/local/nagios/etc/objects/commands.cfg owner={{ nagios_username }} group={{ nagios_group }}
+
+
+#Create hostgroup definitions
+  - name: creating hostgroup config file
+    become: true
+    template: src=client.itzgeek.local.cfg.j2 dest=/usr/local/nagios/etc/servers/client.itzgeek.local.cfg owner={{ nagios_username }} group={{ nagios_group }}
+
+
+#Create services config file
+#   - name: create services config file for nagios
+#     become: true
+#     template: src=services.cfg.j2 dest=/usr/local/nagios/etc/servers/services.cfg owner={{ nagios_username }} group={{ nagios_group }}
+
+
+#Verify nagios config files for any errors
+#  - name: error checking in nagios config files
+#    sudo: ture
+#    command: /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+#Restart Nagios
+  - name: restarting nagios
+    become: true
+    command: systemctl restart nagios

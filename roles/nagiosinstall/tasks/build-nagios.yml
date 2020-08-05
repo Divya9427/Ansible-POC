@@ -1,0 +1,109 @@
+---
+  - name: Upgrade all apt packages
+    apt:
+      update_cache: yes
+      force_apt_get: yes
+  - name: add php repo
+    shell: "add-apt-repository -y ppa:ondrej/php"
+# Update and install dependent packages.
+  - name: Install list of packages
+    apt: pkg={{ item }} state=latest force=yes
+    with_items:
+    - wget
+    - apache2
+    - openssl
+    - perl
+    - gcc
+    - php5.6
+    - libssl-dev
+    - make
+    - php-gd
+    - libgd-dev
+    - libapache2-mod-php
+    - libperl-dev
+    - build-essential
+    - daemon
+    - apache2-utils
+    - unzip
+
+#create group for nagios
+  - name: group for nagios
+    group: name={{ nagios_group }} state=present
+
+    #  - name: Copy nagios tar file to /tmp location
+    #    unarchive: src=nagios-4.0.8.tar.gz dest=/tmp 
+  - name: Download Nagios
+    get_url:
+       url: https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.3.tar.gz
+       dest: /tmp/nagios-4.4.3.tar.gz
+  - name: Extract archive
+    unarchive:
+       src: /tmp/nagios-4.4.3.tar.gz
+       dest: /tmp/
+       remote_src: yes
+#Download and extract tarfiles of nagios core.
+#  - name: download and untar the tarball
+#    sudo: true
+#    shell: creates=/tmp/nagios wget -O - {{ nagios_tarball }} | tar -xz -C /tmp
+#    shell: creates=/tmp/nagios wget -O - https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.0.8.tar.gz | tar -xz -C /tmp
+
+# Add users to nagcmd group
+  - name: Add users to nagcmd group
+    user: name={{ item }} group={{ nagios_group }}
+    with_items:
+    - nagios
+    - www-data
+    
+  - name: checking nagios conf file status
+    stat:
+       path: /etc/apache2/sites-enabled/nagios.conf
+    register: nagios_conf
+    
+  - name: remove nagios conf file if exist
+    file:
+       path: /etc/apache2/sites-enabled/nagios.conf
+       state: absent
+    when: nagios_conf.stat.exists == True 
+
+#executing nagios-core-script
+  - name: executing commands to install nagios
+    command: chdir=/tmp/nagios-4.4.3 {{ item }}
+    with_items:
+    - ./configure --with-nagios-user={{ nagios_username }} --with-nagios-group={{ nagios_group }}
+    - make all
+    - make install
+    - make install-init
+    - make install-config
+    - make install-commandmode
+    - make install-webconf
+
+  - name: Enable modules
+    apache2_module: state=present name={{ item }}
+    with_items:
+    - cgi
+    - rewrite
+
+  - name: Copy files recursively
+    synchronize: src=/tmp/nagios-4.4.3/contrib/eventhandlers/ dest=/usr/local/nagios/libexec recursive=yes mode=push
+    delegate_to: "{{ inventory_hostname }}"
+
+  - name: Change ownership of files
+    file: path=/usr/local/nagios/libexec/eventhandlers/ owner={{ nagios_username }} group={{nagios_group }} state=directory recurse=yes
+
+  - name: Start nagios service
+    service: name=nagios enabled=yes state=started
+
+  - name: Set nagios admin password
+    command: htpasswd -cb /usr/local/nagios/etc/htpasswd.users nagiosadmin {{ nagios_admin_password }}
+
+  - name: Run the following command
+    shell: "a2enmod cgi"
+#restart apache2
+  - name: restart apache
+    become: true
+    service: name=apache2 state=restarted
+
+#restart nagios
+  - name: restart nagios
+    become: true
+    service: name=nagios state=restarted enabled=yes

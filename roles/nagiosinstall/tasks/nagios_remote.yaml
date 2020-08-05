@@ -1,0 +1,24 @@
+---
+  - name: Upgrade all apt packages
+    apt:
+      update_cache: yes
+      force_apt_get: yes
+  - name: Install list of packages
+    apt: pkg={{ item }} state=latest force=yes
+    with_items:
+    - nagios-nrpe-server
+    - nagios-plugins
+  - name: Accept the connection from the Nagios server
+    become: true
+    lineinfile: "dest=/etc/nagios/nrpe.cfg
+                regexp='allowed_hosts=127.0.0.1,::1'
+                line='allowed_hosts={{ master_hostname }}'"
+  - name: Inserting a line after a pattern in nrpe config file
+    lineinfile:
+        path: /etc/nagios/nrpe.cfg
+        line: command[check_root]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /
+        insertafter: command.*
+        
+  - name: restart the the NRPE service.
+    command: systemctl restart nagios-nrpe-server
+  

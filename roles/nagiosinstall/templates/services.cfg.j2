@@ -1,0 +1,55 @@
+## Services definition ##
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers,comm-servers
+        service_description     Current Users
+        check_command           check_nrpe!check_users
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers,comm-servers
+        service_description     Check CPU Load
+        check_command           check_nrpe!check_load
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers,comm-servers
+        service_description     Check Disk Usage
+        check_command           check_nrpe!check_hda1
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers,comm-servers
+        service_description     Zombie Processes
+        check_command           check_nrpe!check_zombie_procs
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers,comm-servers
+        service_description     Total Processes
+        check_command           check_nrpe!check_total_procs
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers,comm-servers
+        service_description     Check FREE Memory
+        check_command           check_nrpe!check_mem
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers
+        service_description     Check TCP Port 443
+        check_command           check_tcp!443!-4
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers
+        service_description     Check TCP Port 8000
+        check_command           check_tcp!8000!-4
+        }
+define service{
+        use                     generic-service
+        hostgroup_name  manage-servers,comm-servers
+        service_description     Check SSH
+        check_command           check_ssh!-4
+        }

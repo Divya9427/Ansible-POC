@@ -1,0 +1,37 @@
+#Nagios Tarball files
+  nagios_tarball: https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.0.8.tar.gz
+  nagios_plugin_tarball: http://nagios-plugins.org/download/nagios-plugins-2.0.3.tar.gz
+  nagios_nrpe_tarball: wget http://nchc.dl.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
+
+#Nagios Basic information 
+  nagios_version: 4.0.8
+  nagios_plugins_version: 2.0.3
+  nagios_nrpe_version: 2.15
+  nagios_build_directory: /tmp
+  nagios_ssl_lib_path: /usr/lib/i386-linux-gnu/
+  #nagios_user: nagiosadmin
+  nagios_group: nagcmd
+  nagios_sys_user: nagios
+  nagios_password: nagios
+  nagios_group: nagcmd
+  nagios_username: nagios
+  apache_path: /etc/apache2/
+  master_hostname: 35.201.239.22
+
+#apche SSL_directory
+  SSL_DIR: /etc/apache2/ssl
+
+#apache log directory path
+  APACHE_LOG_DIR: /var/log/apache2/
+
+#SSL key fields
+  c_name: US
+  state: California
+  locality: Cupertino
+  org_name: bannana
+  org_unit: IT
+  common_name: myname
+  email: abc@xyz.com
+  
+# nagios admin password
+  nagios_admin_password: nagios

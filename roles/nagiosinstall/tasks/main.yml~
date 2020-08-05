@@ -1,0 +1,18 @@
+---
+# Setup apache2.
+- include: apache.yml
+
+# Build and install nagios.
+- include: build-nagios.yml
+
+# Build and install nagios check plugins.
+- include: build-plugins.yml
+
+# Build and install nagios remote checks.
+- include: build-nrpe.yml
+
+#Build nagios over https.
+- include: nagios-ssl.yml
+
+#Build config files for nagios.
+#- include: config-nagios.yml

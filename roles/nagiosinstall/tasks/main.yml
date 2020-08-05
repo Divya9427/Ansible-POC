@@ -1,0 +1,28 @@
+---
+# Setup apache2.
+- include: apache.yml
+  when: inventory_hostname in groups['master_hostname']
+
+# Build and install nagios.
+- include: build-nagios.yml
+  when: inventory_hostname in groups['master_hostname']
+
+# Build and install nagios check plugins.
+- include: build-plugins.yml
+  when: inventory_hostname in groups['master_hostname']
+
+# Build and install nagios remote checks.
+- include: build-nrpe.yml
+  when: inventory_hostname in groups['master_hostname']
+
+#Build nagios over https.
+- include: nagios-ssl.yml
+  when: inventory_hostname in groups['master_hostname']
+
+#Build config files for nagios.
+- include: config-nagios.yml
+  when: inventory_hostname in groups['master_hostname']
+
+# Install plugings in remote hosts
+- include: nagios_remote.yaml
+  when: inventory_hostname in groups['remote_hostname']

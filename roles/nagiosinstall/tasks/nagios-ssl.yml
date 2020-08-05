@@ -1,0 +1,64 @@
+---
+#Nagios for HTTPS (SSL)
+#===========================
+
+#Apache enable for ssl
+  - name: Enable ssl module for ssl
+    command: a2enmod ssl
+
+#Restart apache2
+  - name: restart apache2
+    command: service apache2 restart
+
+# Specify where we will install the certificate
+  - name: SSL installation directory
+    file: path={{ SSL_DIR }} state=directory
+
+# Create our SSL directory in case it doesn't exist
+  - name: Create our SSL directory if not exist
+    file: path={{ SSL_DIR }} mode=0775
+
+#generate csr
+  - name: creating csr
+    #command: openssl req -new -subj "/C={{ c_name }}/ST={{state}}/L={{locality}}/O={{org_name}}/CN={{common_name}}/EMail={{email}}" -key "{{SSL_DIR}}/{{common_name}}.key" -out "{{SSL_DIR}}/{{common_name}}.csr" -passin pass:""
+    command: openssl req -new -nodes -x509 -subj "/C={{ c_name }}/ST={{ state }}/L={{ locality }}/O={{ org_name }}/CN={{ common_name }}/Email={{ email }}" -days 3650 -keyout {{ SSL_DIR }}/{{ common_name }}.key -out {{ SSL_DIR }}/{{ common_name }}.crt
+
+#copying default file for ssl
+  - name: copying default page for ssl
+    template: "src=000-default.j2 dest={{ apache_path }}//sites-enabled/000-default"
+
+#Apache enable for ssl
+  - name: Enable ssl module for ssl
+    command: a2enmod ssl
+
+#Make the Nagios web interface require SSL:
+#  - name: Nagios web interface require SSL
+#    command: sed -i~SSLRequireSSL '/SSLRequireSSL/s/#/ /' /etc/apache2/conf.d/nagios.conf
+
+#Reload Apache to make the SSL-enabled website accessible:
+  - name: Reload Apache for SSL
+    command: service apache2 reload
+    
+  - name: create nagios service file
+    copy:
+       src: nagios.service
+       dest: /etc/systemd/system/nagios.service
+
+# Making nagios executable init.d
+
+#   - name: Nagios executable init.d
+#     become: true
+#     shell: "chmod +x /etc/init.d/nagios"
+
+#Restart Nagios
+
+  - name: restart nagios
+    become: true
+    shell: "systemctl enable nagios"
+    
+  - name: Starting nagios service
+    shell: "systemctl start nagios"
+
+#Restart apache2
+  - name: restart apache2
+    command: service apache2 restart

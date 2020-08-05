@@ -1,0 +1,22 @@
+---
+#Download and untar nagios plugins
+- name: Copy nagios tar file to /tmp location
+  unarchive: src=nagios-plugins-2.0.3.tar.gz dest=/tmp
+
+#- name: download and untar the tarball nagios plugins
+#  sudo: true
+#  shell: creates=/tmp/nagios wget -O - {{ nagios_plugin_tarball }} | tar -xz -C /tmp
+  
+
+#Configuring nagios plugins
+- name: configure
+  become: true
+  shell: "./configure --with-nagios-user={{ nagios_username }} --with-nagios-group={{ nagios_group }} chdir=/tmp/nagios-plugins-2.0.3"
+
+- name: make
+  become: true
+  command: "make all chdir=/tmp/nagios-plugins-2.0.3"
+
+- name: install nagios plugins package
+  become: true
+  shell: "make install chdir=/tmp/nagios-plugins-2.0.3"

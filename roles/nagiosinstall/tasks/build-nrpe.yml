@@ -1,0 +1,30 @@
+---
+#Download and untar nrpe
+  - name: Copy nagios tar file to /tmp location
+    unarchive: src=nrpe-2.15.tar.gz dest=/tmp
+
+#  - name: download and untar the tarball nrpe
+#    become: true
+#    shell: creates=/tmp/nagios wget -O - {{ nagios_nrpe_tarball }} | tar -xz -C /tmp
+#    shell: creates=/tmp/nagios wget -O - http://nchc.dl.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz | tar -xz -C /tmp
+
+#executing nagios-core-script
+  - name: executing commands to install nagios nrpe
+    become: yes
+    command: chdir=/tmp/nrpe-2.15 {{ item }}
+    with_items:
+    - ./configure --with-nagios-user={{ nagios_username }} --with-nagios-group={{ nagios_group }} --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu/
+    - make all
+    - make install-plugin
+
+#Restart Nagios
+
+  - name: restart nagios
+    become: true
+    service: name=nagios state=restarted
+
+#Restart apache2
+
+  - name: restart apache2 service
+    become: true
+    service: name=apache2 state=restarted
