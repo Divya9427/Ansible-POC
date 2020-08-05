@@ -1,0 +1,37 @@
+---
+- name: Install required packages
+  become: yes
+  yum:
+    name: MySQL-python
+    state: present
+
+- name: Add mysql-community.repo
+  become: yes
+  template:
+    src: mysql-community.repo.j2
+    dest: /etc/yum.repos.d/mysql-community.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add GPG mysql key
+  become: yes
+  copy:
+    src: RPM-GPG-KEY-mysql
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install mysql
+  become: yes
+  yum:
+    name: mysql-server
+    state: present
+
+- name: Start mysqld
+  become: yes
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
