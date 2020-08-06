@@ -1,4 +1,19 @@
 ---
+- name: checking tomcat running status
+  shell: "java -cp catalina.jar org.apache.catalina.util.ServerInfo"
+  args:
+    chdir: /usr/share/tomcat/lib
+  register: tomcat_running
+
+  #- debug:
+  #    var: tomcat_running
+- block:
+    - name: "end play if nothing to install tomcat"
+      debug:
+        msg: "Already Tomcat installed"
+    - meta: end_play
+  when: "tomcat_running.rc ==0"
+  
 # Update repositories cache
 - name: Upgrade all apt packages
   apt:
