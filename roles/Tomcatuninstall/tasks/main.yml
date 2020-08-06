@@ -1,20 +1,21 @@
----
- - name: Stop Tomcat
-      command: sh /usr/share/tomcat/bin/shutdown.sh
-      become: true
-      become_user: tomcat
-
-    - name: Remove Tomcat
-      file:
-        path: /opt/apache-tomcat-7.0.61
-        state: absent
-
-    - name: remove user "tomcat"
-      user:
-        name: tomcat
-        state: absent
-
-    - name: remove group "tomcat"
-      group:
-        name: tomcat
-        state: absent
+--- 
+- 
+  become: true
+  become_user: tomcat
+  command: "sh /usr/share/tomcat/bin/shutdown.sh"
+  name: "Stop Tomcat"
+- 
+  file: 
+    path: /opt/apache-tomcat-7.0.61
+    state: absent
+  name: "Remove Tomcat"
+- 
+  name: "remove user \"tomcat\""
+  user: 
+    name: tomcat
+    state: absent
+- 
+  group: 
+    name: tomcat
+    state: absent
+  name: "remove group \"tomcat\""
