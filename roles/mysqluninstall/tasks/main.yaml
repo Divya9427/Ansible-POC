@@ -10,3 +10,7 @@
     - libaio1
     - python-mysqldb
     - python3-mysqldb
+- name: Remove MySQL
+  file:
+     path: /usr/local/mysql
+     state: absent
