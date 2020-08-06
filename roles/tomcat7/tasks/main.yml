@@ -38,7 +38,7 @@
     createhome: no
   become: True
   become_method: sudo
-  when: "user_name.rc !=0"
+  #when: "user_name.rc !=0"
   
 - name: checking tomcat running status
   shell: "java -cp catalina.jar org.apache.catalina.util.ServerInfo"
