@@ -1,4 +1,6 @@
 ---
+- name: stop nagios 
+  command: systemctl stop nagios
 - name: Remove nagios
   become: yes
   apt: >
