@@ -1,10 +1,11 @@
 ---
 - name: Remove MySQL
   become: yes
-  apt:
+  apt: >
     name: "{{ item }}"
     state: absent
-    update_cache: yes
+    purge: yes
+    force: yes
   with_items:
     - libaio1
     - python-mysqldb
