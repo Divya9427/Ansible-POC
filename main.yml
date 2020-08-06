@@ -1,0 +1,5 @@
+- name: jenkins job creation
+  hosts: localhost
+  become: yes
+  roles:
+     - Jenkins_Job_Creation 
