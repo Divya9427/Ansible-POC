@@ -1,4 +1,6 @@
 ---
+- name: stop mysql service 
+  command: systemctl stop mysql
 - name: Remove MySQL
   become: yes
   apt: >
