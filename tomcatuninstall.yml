@@ -1,0 +1,7 @@
+---
+- name: Uninstall MySQL Server
+  hosts: tomcat-servers
+  remote_user: root
+  become: yes
+  roles:
+    - Tomcatuninstall
