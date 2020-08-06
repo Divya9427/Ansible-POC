@@ -44,7 +44,6 @@
   group:
     name: tomcat
   when: "group_name.rc !=0
-  
 - name: add user "tomcat"
   user:
      name: tomcat
