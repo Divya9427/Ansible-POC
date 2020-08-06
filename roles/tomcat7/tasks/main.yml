@@ -13,22 +13,42 @@
         msg: "Already Tomcat installed"
     - meta: end_play
   when: "tomcat_running.rc ==0"
-
+  
 # Update repositories cache
 - name: Upgrade all apt packages
   apt:
     update_cache: yes
     force_apt_get: yes
 
+- name: Fetch Java version
+  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: java_version
+
 # Installing Open JDK 8 in Host
 - name: Install Java 1.8
   apt:
     name: openjdk-8-jdk
     state: present
-
+  when: "java_version.rc !=0"
+- name: Print Java Version Current installed In Host
+  debug:
+     var: java_version
+  when: "java_version.rc ==0"
+  
+- name: Check tomcat group
+  shell: "getent group | cut -d: -f1 | grep tomcat"
+  register: group_name
+  ignore_errors: true
+  
 - name: add group "tomcat"
   group:
     name: tomcat
+  when: "group_name.rc !=0
+  
+- name: checking tomcat user
+  shell: "cut -d: -f1 /etc/passwd | grep tomcat"
+  register: user_name
+  ignore_errors: true
 
 - name: add user "tomcat"
   user:
@@ -38,11 +58,13 @@
      createhome: no
   become: True
   become_method: sudo
+  when: "user_name.rc !=0"
 
 - name: Download Tomcat
   get_url:
      url: http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.61/bin/apache-tomcat-7.0.61.tar.gz
      dest: /opt/apache-tomcat-7.0.61.tar.gz
+     
 - name: Extract archive
   unarchive:
       src: /opt/apache-tomcat-7.0.61.tar.gz
@@ -88,7 +110,7 @@
   service:
      name: tomcat
      state: started
-     # enabled: yes
+#     enabled: yes
 
 - name: wait for tomcat to start
   wait_for: port={{http_port}}
