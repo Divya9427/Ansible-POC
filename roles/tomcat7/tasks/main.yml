@@ -1,8 +1,8 @@
 --- 
 - stat:
-   path:  /usr/share/tomcat
+    path:  /usr/share/tomcat
   register: tomcat  
-
+  
 - name: checking tomcat running status
   shell: "java -cp catalina.jar org.apache.catalina.util.ServerInfo"
   args:
