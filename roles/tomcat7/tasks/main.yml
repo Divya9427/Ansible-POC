@@ -40,21 +40,6 @@
   become_method: sudo
   #when: "user_name.rc !=0"
   
-- name: checking tomcat running status
-  shell: "java -cp catalina.jar org.apache.catalina.util.ServerInfo"
-  args:
-    chdir: /usr/share/tomcat/lib
-  register: tomcat_running
-
-  #- debug:
-  #    var: tomcat_running
-- block:
-    - name: "end play if nothing to install tomcat"
-      debug:
-        msg: "Already Tomcat installed"
-    - meta: end_play
-  when: "tomcat_running.rc ==0"
-
 - name: Download Tomcat
   get_url:
      url: http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.61/bin/apache-tomcat-7.0.61.tar.gz
