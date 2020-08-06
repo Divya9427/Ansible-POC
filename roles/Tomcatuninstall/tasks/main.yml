@@ -1,7 +1,5 @@
 ---
-- hosts: tomcat-servers
-  tasks:
-    - name: Stop Tomcat
+ - name: Stop Tomcat
       command: sh /usr/share/tomcat/bin/shutdown.sh
       become: true
       become_user: tomcat
