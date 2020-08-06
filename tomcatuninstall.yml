@@ -1,5 +1,5 @@
 ---
-- name: Uninstall MySQL Server
+- name: Uninstall tomcat 
   hosts: tomcat-servers
   remote_user: root
   become: yes
