@@ -46,10 +46,10 @@
   when: "group_name.rc !=0
 - name: add user "tomcat"
   user:
-     name: tomcat
-     group: tomcat
-     home: /usr/share/tomcat
-     createhome: no
+    name: tomcat
+    group: tomcat
+    home: /usr/share/tomcat
+    createhome: no
   become: True
   become_method: sudo
   when: "user_name.rc !=0"
