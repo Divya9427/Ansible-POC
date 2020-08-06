@@ -2,6 +2,7 @@
 # This playbook deploys a simple standalone Tomcat 7 ot 8 with JDK 8
 
 - hosts: tomcat-servers
+  gather_facts: true
   remote_user: root
   become: yes
   become_method: sudo
