@@ -44,12 +44,7 @@
   group:
     name: tomcat
   when: "group_name.rc !=0
-  
-- name: checking tomcat user
-  shell: "cut -d: -f1 /etc/passwd | grep tomcat"
-  register: user_name
-  ignore_errors: true
-
+ 
 - name: add user "tomcat"
   user:
      name: tomcat
