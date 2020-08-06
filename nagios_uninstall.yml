@@ -1,0 +1,7 @@
+---
+- name: Uninstall Nagios Master
+  hosts: master_hostname
+  remote_user: root
+  become: yes
+  roles:
+    - nagiosuninstall
