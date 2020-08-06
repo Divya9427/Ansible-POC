@@ -1,0 +1,7 @@
+---
+- name: Uninstall MySQL Server
+  hosts: sql
+  remote_user: root
+  become: yes
+  roles:
+    - mysqluninstall
