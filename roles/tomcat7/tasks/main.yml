@@ -1,14 +1,14 @@
 ---
-- stat:
-     path: /usr/share/tomcat/lib
-  register: tomcat
+#- stat:
+ #    path: /usr/share/tomcat/lib
+ # register: tomcat
   
 - name: checking tomcat running status
   shell: "java -cp catalina.jar org.apache.catalina.util.ServerInfo"
-  args:
-    chdir: /usr/share/tomcat/lib
+  #args:
+   # chdir: /usr/share/tomcat/lib
   register: tomcat_running
-  when: tomcat.stat.exists == True
+  #when: tomcat.stat.exists == True
   
   #- debug:
   #    var: tomcat_running
