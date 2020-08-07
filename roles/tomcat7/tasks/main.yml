@@ -5,8 +5,8 @@
   
 - name: checking tomcat running status
   shell: "java -cp catalina.jar org.apache.catalina.util.ServerInfo"
-  #args:
-   # chdir: /usr/share/tomcat/lib
+  args:
+    chdir: /usr/share/tomcat/lib
   register: tomcat_running
   #when: tomcat.stat.exists == True
   
