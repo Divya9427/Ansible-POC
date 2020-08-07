@@ -1,13 +1,13 @@
 ---
 
-- name: Populate service facts
-  service_facts:
-- block:
-    - name: "end play if nothing to install tomcat"
-      debug:
-        msg: "Already Tomcat installed"
-    - meta: end_play
-  when: "'tomcat' in services"
+# - name: Populate service facts
+#   service_facts:
+# - block:
+#     - name: "end play if nothing to install tomcat"
+#       debug:
+#         msg: "Already Tomcat installed"
+#     - meta: end_play
+#   when: "'tomcat' in services"
  # Update repositories cache
 - name: Upgrade all apt packages
   apt:
