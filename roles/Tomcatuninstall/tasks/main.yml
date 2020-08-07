@@ -1,8 +1,8 @@
 --- 
   - name: Ensure tomcat is removed
-      apt:
-        name: tomcat
-        state: absent
+    apt:
+       name: tomcat
+       state: absent
 # - 
 #   become: true
 #   become_user: tomcat
