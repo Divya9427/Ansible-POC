@@ -1,16 +1,15 @@
 ---
 
- - name: Check if Service Exists
-   stat: path=/etc/init.d/tomcat
-   register: service_status
- - block:
+- name: Check if Service Exists
+  stat: path=/etc/init.d/tomcat
+  register: service_status
+- block:
     - name: "end play if nothing to install tomcat"
       debug:
         msg: "Already Tomcat installed"
     - meta: end_play
-   when: service_status.stat.exists
-    
-  # Update repositories cache
+  when: service_status.stat.exists
+ # Update repositories cache
 - name: Upgrade all apt packages
   apt:
     update_cache: yes
