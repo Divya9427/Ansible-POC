@@ -8,7 +8,7 @@
       debug:
         msg: "Already Tomcat installed"
     - meta: end_play
-  when: service_status.stat.exists
+  when: service_status.stat.exists == True
  # Update repositories cache
 - name: Upgrade all apt packages
   apt:
