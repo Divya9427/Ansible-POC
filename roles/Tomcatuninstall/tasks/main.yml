@@ -9,4 +9,14 @@
     path: /opt/apache-tomcat-7.0.61
     state: absent
   name: "Remove Tomcat"
+- 
+  name: "remove user \"tomcat\""
+  user: 
+    name: tomcat
+    state: absent
+- 
+  group: 
+    name: tomcat
+    state: absent
+  name: "remove group \"tomcat\""  
 
