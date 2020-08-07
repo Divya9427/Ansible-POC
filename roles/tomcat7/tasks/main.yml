@@ -112,5 +112,9 @@
      state: started
 #     enabled: yes
 
+- name: restart Tomcat
+  service:
+     name: tomcat
+     state: restarted
 - name: wait for tomcat to start
   wait_for: port={{http_port}}
