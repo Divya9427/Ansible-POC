@@ -1,14 +1,13 @@
 ---
 
-- name: Check if Service Exists
-  stat: path=/etc/init.d/tomcat
-  register: service_status
+- name: Populate service facts
+  service_facts:
 - block:
     - name: "end play if nothing to install tomcat"
       debug:
         msg: "Already Tomcat installed"
     - meta: end_play
-  when: service_status.stat.exists == True
+  when: "'tomcat' in services"
  # Update repositories cache
 - name: Upgrade all apt packages
   apt:
